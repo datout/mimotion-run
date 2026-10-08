@@ -1,0 +1,34 @@
+name: 清空 Actions 记录
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 删除所有历史 Actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "开始删除 Actions 历史记录..."
+
+          gh api --paginate \
+            "repos/${GITHUB_REPOSITORY}/actions/runs?per_page=100" \
+            --jq '.workflow_runs[].id' |
+          while read run_id; do
+            # 不能删除当前正在执行的这个 cleanup
+            if [ "$run_id" != "$GITHUB_RUN_ID" ]; then
+              echo "Deleting run $run_id"
+              gh api \
+                --method DELETE \
+                "repos/${GITHUB_REPOSITORY}/actions/runs/$run_id" || true
+            fi
+          done
+
+          echo "历史记录删除完成"
