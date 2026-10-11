@@ -1,15 +1,28 @@
 name: 刷步数
 
+
 on:
-  #push:
-  #  branches: [ master ]
-  #pull_request:
-  #  branches: [ master ]
   schedule:
-    - cron: '44 0,4,8,11,12 * * *'
+    - cron: '23 9 * * *'
+      timezone: 'Asia/Shanghai'
+
+    - cron: '41 12 * * *'
+      timezone: 'Asia/Shanghai'
+
+    - cron: '28 16 * * *'
+      timezone: 'Asia/Shanghai'
+
+    - cron: '47 19 * * *'
+      timezone: 'Asia/Shanghai'
+
+    - cron: '34 20 * * *'
+      timezone: 'Asia/Shanghai'
+
   watch:
     types: started
+
   workflow_dispatch:
+
 
 jobs:
   build:
